@@ -15,15 +15,18 @@ export class UserController extends AppController {
     }
 
     async new() {
-        const user = this.userRepository.create()
-        this.response.render('users/new', { ...this.request.cookies, user })
+        const user = this.userRepository.create(this.postParams)
+        this.response.render('users/new', { errors: this.errors, user })
     }
 
     async create() {
-        const user = this.userRepository.create(this.userParams)
+        const params = this.userParams
+        const user = this.userRepository.create()
         const errors = await validate(user)
         if (errors.length) {
-            this.response.status(422).redirect('users/new')
+            this.session.errors = errors
+            this.session.postParams = params
+            this.response.redirect('users/new')
         } else {
             await this.userRepository.insert(user)
             this.response.cookie('notice', 'User saved successfully')

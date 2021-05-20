@@ -15,4 +15,20 @@ export default class AppController {
     this.response.clearCookie('notice')
     this.response.clearCookie('error')
   }
+
+  get errors() {
+    const errors = this.session.errors
+    delete this.session.errors
+    return errors
+  }
+
+  get postParams() {
+    const postParams = this.session.postParams
+    delete this.session.postParams
+    return postParams
+  }
+
+  get session() {
+    return this.request.session as any
+  }
 }

@@ -21,7 +21,7 @@ createConnection(ormconfig).then(async connection => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 10000,
+            maxAge: 60 * 60 * 1000,
             secure: true
         }
     }));
