@@ -1,10 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, Column, PrimaryColumn, Check} from "typeorm";
 
 @Entity()
 export class User {
-
-    @PrimaryGeneratedColumn()
-    id: number;
 
     @Column()
     firstName: string;
@@ -12,7 +9,30 @@ export class User {
     @Column()
     lastName: string;
 
-    @Column()
-    age: number;
+    @Check('/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i')
+    @PrimaryColumn()
+    email: string;
 
+    @Column()
+    passwordHash: string;
+
+    @Column({
+        nullable: true
+    })
+    activationCode: string;
+
+    @Column({
+        default: false
+    })
+    active: boolean;
+
+    @Column({
+        nullable: true
+    })
+    recoveryCode: string;
+
+    @Column({
+        default: false
+    })
+    recovering: boolean;
 }

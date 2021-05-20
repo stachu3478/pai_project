@@ -1,0 +1,29 @@
+doctype html
+html
+  head
+    title Help?
+  body
+    div test
+    form(action="/users", method="post") 
+      fieldset 
+        legend User data 
+        br
+        label(for="firstName") First name 
+        br
+        input(type="text", name="firstName")
+        br
+        label(for="lastName") Last name 
+        br
+        input(type="text", name="lastName")
+        br
+        label(for="email") Email
+        br
+        input(type="text", name="email")
+        br
+        label(for="password") Password
+        br
+        input(type="password", name="password")
+        br
+        label(for="repeat_password") Repeat password 
+        br
+        input(type="password", name="repeat_password")
