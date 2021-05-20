@@ -1,6 +1,7 @@
 import {getRepository, DeepPartial} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {User} from "../entity/User";
+import { validate } from "class-validator";
 
 export class UserController {
 
@@ -8,13 +9,14 @@ export class UserController {
 
     async index(request: Request, response: Response, next: NextFunction) {
         response.render('users/index', {
+            ...request.cookies,
             users: await this.userRepository.find()
         })
     }
 
     async new(request: Request, response: Response, next: NextFunction) {
         const user = this.userRepository.create()
-        response.render('users/new', { user })
+        response.render('users/new', { ...request.cookies, user, notice: 'xd?' })
     }
 
     async show(request: Request, response: Response, next: NextFunction) {
@@ -23,13 +25,15 @@ export class UserController {
 
     async create(request: Request, response: Response, next: NextFunction) {
         const user = this.userRepository.create(request.body as DeepPartial<User>)
-        this.userRepository.save(user)
-            .then(() => {
-                response.redirect('users/index')
-            })
-            .catch(() => {
-                response.render('users/new', { user })
-            })
+        validate(user).then(errors => {
+            if (errors.length) {
+                response.status(422).render('users/new', { errors })
+            } else {
+                this.userRepository.insert(user)
+                response.cookie('notice', 'User saved successfully', { maxAge: 10000 })
+                response.redirect('users')
+            }
+        })
     }
 
 }

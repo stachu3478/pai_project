@@ -3,7 +3,8 @@ html
   head
     title Hello Pug
   body
-    p.greetings#people Hello World!
+    if notice 
+      p.notice #{notice}
     h2 Users 
     a(href="/users/new") New
     ul

@@ -3,7 +3,10 @@ html
   head
     title Help?
   body
-    div test
+    if errors
+      each error in errors
+        each constraint in error.constraints
+          div.error #{constraint}
     form(action="/users", method="post") 
       fieldset 
         legend User data 
@@ -27,3 +30,5 @@ html
         label(for="repeat_password") Repeat password 
         br
         input(type="password", name="repeat_password")
+        br
+        button(type="submit") Save

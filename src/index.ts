@@ -10,7 +10,7 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
-    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.set('view engine', 'pug');
     app.set('views','./src/views');
 

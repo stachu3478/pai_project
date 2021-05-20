@@ -1,19 +1,27 @@
 import {Entity, Column, PrimaryColumn, Check} from "typeorm";
+import { IsEmail, Length, MinLength, Validate } from "class-validator"
+import bcrypt from 'bcrypt'
+import { UniqueEmail } from "../validator/UniqueEmail";
 
 @Entity()
 export class User {
 
+    @MinLength(2)
     @Column()
     firstName: string;
 
+    @MinLength(2)
     @Column()
     lastName: string;
 
-    @Check('/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i')
+    @IsEmail()
     @PrimaryColumn()
+    @Validate(UniqueEmail)
     email: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     passwordHash: string;
 
     @Column({
@@ -35,4 +43,12 @@ export class User {
         default: false
     })
     recovering: boolean;
+
+    passwordMathes(val: string) {
+        return bcrypt.compareSync(val, this.passwordHash);
+    }
+
+    set password(val: string) {
+        this.passwordHash = bcrypt.hashSync(val, 10);
+    }
 }
