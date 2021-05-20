@@ -8,8 +8,9 @@ export class UserController {
     private userRepository = getRepository(User);
 
     async index(request: Request, response: Response, next: NextFunction) {
+        
         response.render('users/index', {
-            ...request.cookies,
+            notice: request.cookies.notice || 'twoj stary pijany',
             users: await this.userRepository.find()
         })
     }
@@ -30,9 +31,12 @@ export class UserController {
                 response.status(422).render('users/new', { errors })
             } else {
                 this.userRepository.insert(user)
-                response.cookie('notice', 'User saved successfully', { maxAge: 10000 })
+                response.cookie('notice', 'User saved successfully', { maxAge: 1000 })
                 response.redirect('users')
             }
+        }).catch(errors => {
+            response.status(500).end('Internal server error')
+            console.log(errors)
         })
     }
 

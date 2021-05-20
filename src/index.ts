@@ -4,8 +4,9 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import {User} from "./entity/User";
 import RouteRegistry from "./routes/Registry";
+import * as cookieparser from 'cookie-parser'
+import * as session from 'express-session'
 
-const routers: { [key: string]: express.Router } = {}
 createConnection().then(async connection => {
 
     // create express app
@@ -13,6 +14,15 @@ createConnection().then(async connection => {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.set('view engine', 'pug');
     app.set('views','./src/views');
+    app.use(cookieparser());
+    app.use(session({
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 10000
+        }
+    }));
 
     // register express routes from defined application routes
     new RouteRegistry(app).register()
