@@ -2,10 +2,10 @@ import "reflect-metadata";
 import {createConnection} from "typeorm";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import {User} from "./entity/User";
 import RouteRegistry from "./routes/Registry";
 import * as cookieparser from 'cookie-parser'
 import * as session from 'express-session'
+import seeds from "./seeds";
 
 createConnection().then(async connection => {
 
@@ -34,18 +34,7 @@ createConnection().then(async connection => {
     app.listen(3000);
 
     // insert new users for test
-    await connection.manager.save(connection.manager.create(User, {
-        firstName: "Timber",
-        lastName: "Saw",
-        email: 'test',
-        passwordHash: 'hashedpass'
-    }));
-    await connection.manager.save(connection.manager.create(User, {
-        firstName: "Phantom",
-        lastName: "Assassin",
-        email: 'test2',
-        passwordHash: 'mypass'
-    }));
+    seeds(connection)
 
     console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
 

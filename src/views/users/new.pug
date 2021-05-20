@@ -3,32 +3,26 @@ html
   head
     title Help?
   body
-    if errors
-      each error in errors
-        each constraint in error.constraints
-          div.error #{constraint}
+    
+    a(href="/users") Back
     form(action="/users", method="post") 
       fieldset 
         legend User data 
+        if errors
+          each error in errors
+            each constraint in error.constraints
+              div.error #{constraint}
         br
         label(for="firstName") First name 
         br
-        input(type="text", name="firstName")
+        input(type="text", name="firstName", value=user.firstName)
         br
         label(for="lastName") Last name 
         br
-        input(type="text", name="lastName")
+        input(type="text", name="lastName", value=user.lastName)
         br
         label(for="email") Email
         br
-        input(type="text", name="email")
-        br
-        label(for="password") Password
-        br
-        input(type="password", name="password")
-        br
-        label(for="repeat_password") Repeat password 
-        br
-        input(type="password", name="repeat_password")
+        input(type="text", name="email", value=user.email)
         br
         button(type="submit") Save

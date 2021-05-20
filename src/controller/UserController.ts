@@ -1,43 +1,37 @@
-import {getRepository, DeepPartial} from "typeorm";
-import {NextFunction, Request, Response} from "express";
+import * as _ from 'lodash'
+import {getRepository} from "typeorm";
 import {User} from "../entity/User";
 import { validate } from "class-validator";
+import AppController from './AppController';
 
-export class UserController {
-
+export class UserController extends AppController {
     private userRepository = getRepository(User);
 
-    async index(request: Request, response: Response, next: NextFunction) {
-        
-        response.render('users/index', {
-            notice: request.cookies.notice || 'twoj stary pijany',
+    async index() {
+        this.response.render('users/index', {
+            notice: this.request.cookies.notice,
             users: await this.userRepository.find()
         })
     }
 
-    async new(request: Request, response: Response, next: NextFunction) {
+    async new() {
         const user = this.userRepository.create()
-        response.render('users/new', { ...request.cookies, user, notice: 'xd?' })
+        this.response.render('users/new', { ...this.request.cookies, user })
     }
 
-    async show(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne(request.params.id);
+    async create() {
+        const user = this.userRepository.create(this.userParams)
+        const errors = await validate(user)
+        if (errors.length) {
+            this.response.status(422).redirect('users/new', )
+        } else {
+            await this.userRepository.insert(user)
+            this.response.cookie('notice', 'User saved successfully')
+            this.response.redirect('users')
+        }
     }
 
-    async create(request: Request, response: Response, next: NextFunction) {
-        const user = this.userRepository.create(request.body as DeepPartial<User>)
-        validate(user).then(errors => {
-            if (errors.length) {
-                response.status(422).render('users/new', { errors })
-            } else {
-                this.userRepository.insert(user)
-                response.cookie('notice', 'User saved successfully', { maxAge: 1000 })
-                response.redirect('users')
-            }
-        }).catch(errors => {
-            response.status(500).end('Internal server error')
-            console.log(errors)
-        })
+    private get userParams() {
+        return _.pick(this.request.body, ['firstName', 'lastName', 'email']) 
     }
-
 }

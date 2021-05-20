@@ -16,12 +16,13 @@ export default class RouteRegistry {
       const router = this.findRouter(fullPath)
       const path = this.findPath(fullPath)
       router[route.method](path, (req: express.Request, res: express.Response, next: Function) => {
-        const controller = (new (route.controller as any))
+        const controller = (new (route.controller as any)(req, res, next))
         if (!controller || !controller[route.action] || path !== req.path) {
           next()
           return
         }
-        const result = controller[route.action](req, res, next);
+        controller.beforeAction()
+        const result = controller[route.action]();
         if (result instanceof Promise) {
             result.then(result => result !== null && result !== undefined ? res.send(result) : undefined);
         } else if (result !== null && result !== undefined) {
