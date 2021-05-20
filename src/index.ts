@@ -6,8 +6,9 @@ import RouteRegistry from "./routes/Registry";
 import * as cookieparser from 'cookie-parser'
 import * as session from 'express-session'
 import seeds from "./seeds";
+import ormconfig from "../ormconfig";
 
-createConnection().then(async connection => {
+createConnection(ormconfig).then(async connection => {
 
     // create express app
     const app = express();
@@ -16,11 +17,12 @@ createConnection().then(async connection => {
     app.set('views','./src/views');
     app.use(cookieparser());
     app.use(session({
-        secret: 'secret',
+        secret: process.env.SESSION_SECRET || 'secret',
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 10000
+            maxAge: 10000,
+            secure: true
         }
     }));
 

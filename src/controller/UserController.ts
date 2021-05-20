@@ -23,7 +23,7 @@ export class UserController extends AppController {
         const user = this.userRepository.create(this.userParams)
         const errors = await validate(user)
         if (errors.length) {
-            this.response.status(422).redirect('users/new', )
+            this.response.status(422).redirect('users/new')
         } else {
             await this.userRepository.insert(user)
             this.response.cookie('notice', 'User saved successfully')
