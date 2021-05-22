@@ -22,7 +22,7 @@ createConnection(ormconfig).then(async connection => {
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000,
-            secure: true
+            secure: process.env.NODE_ENV === 'production'
         }
     }));
 

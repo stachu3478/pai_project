@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
 import {getRepository} from "typeorm";
 import {User} from "../entity/User";
-import { validate } from "class-validator";
 import AppController from './AppController';
 
 export class UserController extends AppController {
@@ -21,10 +20,10 @@ export class UserController extends AppController {
 
     async create() {
         const params = this.userParams
-        const user = this.userRepository.create()
-        const errors = await validate(user)
-        if (errors.length) {
-            this.session.errors = errors
+        const user = this.userRepository.create(params)
+        await this.validate(user)
+        if (this.errors.length) {
+            this.session.errors = this.errors
             this.session.postParams = params
             this.response.redirect('users/new')
         } else {

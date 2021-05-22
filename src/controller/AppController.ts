@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { validate } from "class-validator";
 
 export default class AppController {
   protected request: Request
@@ -16,15 +17,17 @@ export default class AppController {
     this.response.clearCookie('error')
   }
 
+  async validate(record: any) {
+    this.session.errors = await validate(record)
+  }
+
   get errors() {
-    const errors = this.session.errors
-    delete this.session.errors
-    return errors
+    return this.session.errors
   }
 
   get postParams() {
     const postParams = this.session.postParams
-    delete this.session.postParams
+    this.session.postParams = []
     return postParams
   }
 
