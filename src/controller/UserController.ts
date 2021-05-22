@@ -14,17 +14,16 @@ export class UserController extends AppController {
     }
 
     async new() {
-        const user = this.userRepository.create(this.postParams)
-        this.response.render('users/new', { errors: this.errors, user })
+        const user = this.userRepository.create(this.session.takeCache('lastParams', {}))
+        this.response.render('users/new', { errors: this.session.takeCache('errors', {}), user })
     }
 
     async create() {
         const params = this.userParams
         const user = this.userRepository.create(params)
-        await this.validate(user)
-        if (this.errors.length) {
-            this.session.errors = this.errors
-            this.session.postParams = params
+        const errors = await this.validate(user)
+        if (errors.length) {
+            this.session.putCache('lastParams', params)
             this.response.redirect('users/new')
         } else {
             await this.userRepository.insert(user)

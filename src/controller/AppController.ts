@@ -1,15 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { validate } from "class-validator";
+import SessionWrapper from "../utils/SessionWrapper";
 
 export default class AppController {
   protected request: Request
   protected response: Response
   protected next: NextFunction
+  protected session: SessionWrapper
 
   constructor(request: Request, response: Response, next: NextFunction) {
     this.request = request
     this.response = response
     this.next = next
+    this.session = new SessionWrapper(request)
   }
 
   beforeAction() {
@@ -18,20 +21,6 @@ export default class AppController {
   }
 
   async validate(record: any) {
-    this.session.errors = await validate(record)
-  }
-
-  get errors() {
-    return this.session.errors
-  }
-
-  get postParams() {
-    const postParams = this.session.postParams
-    this.session.postParams = []
-    return postParams
-  }
-
-  get session() {
-    return this.request.session as any
+    return this.session.putCache('errors', await validate(record))
   }
 }
