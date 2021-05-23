@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title Activate yout account
+  body
+    h1 Welcome to App
+    p If you used to activate account in our service please follow the link below to finish this process
+    p Otherwise ignore this email
+    a(href=(`/users/passwords/new?email=${email}&activationCode=${activationCode}`)) Activate account
+    footer App inc.
