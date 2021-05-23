@@ -16,7 +16,7 @@ createConnection(ormconfig).then(async connection => {
     const app = express();
     app.use(bodyParser.urlencoded({ extended: true }));
     app.set('view engine', 'pug');
-    app.set('views','./src/views');
+    app.set('views','./src/view');
     app.use(cookieparser());
     app.use(session({
         secret: process.env.SESSION_SECRET || 'secret',

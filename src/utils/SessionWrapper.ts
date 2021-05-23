@@ -1,8 +1,9 @@
 import { Request } from "express";
-import { ValidationError } from "class-validator";
+import { getRepository } from "typeorm";
+import { User } from "../entity/User";
 
 export default class SessionWrapper {
-  private store: Request['session']
+  private store: any
   private cache: { [key: string]: any } = {}
   private static globalCache: { [key: string]: Object } = {}
   
@@ -20,5 +21,13 @@ export default class SessionWrapper {
     const v = this.cache[key]
     delete this.cache[key]
     return v || defaultValue
+  }
+
+  async getUser() {
+    return await getRepository(User).findOne({ email: this.store.loggedInUserEmail })
+  }
+
+  set user(user: User) {
+    this.store.loggedInUserEmail = user.email
   }
 }
