@@ -6,13 +6,6 @@ import AppController from './AppController';
 export class UserController extends AppController {
     private userRepository = getRepository(User);
 
-    async index() {
-        this.response.render('users/index', {
-            notice: this.request.cookies.notice,
-            users: await this.userRepository.find()
-        })
-    }
-
     async new() {
         const user = this.userRepository.create(this.session.takeCache('lastParams', {}))
         this.response.render('users/new', { errors: this.session.takeCache('errors', {}), user })

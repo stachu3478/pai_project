@@ -1,6 +1,6 @@
 import {Entity, Column, PrimaryColumn, getRepository} from "typeorm";
 import { IsEmail, MinLength, Validate } from "class-validator"
-import bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 import { UniqueEmail } from "../validator/UniqueEmail";
 import AppEntity from "./AppEntity";
 
@@ -47,6 +47,7 @@ export class User extends AppEntity<User> {
     recovering: boolean;
 
     passwordMathes(val: string) {
+        if (!this.passwordHash) return false
         return bcrypt.compareSync(val, this.passwordHash);
     }
 

@@ -7,6 +7,7 @@ export default class AppController {
   protected response: Response
   protected next: NextFunction
   protected session: SessionWrapper
+  private shouldRender = true
 
   constructor(request: Request, response: Response, next: NextFunction) {
     this.request = request
@@ -18,6 +19,20 @@ export default class AppController {
   beforeAction() {
     this.response.clearCookie('notice')
     this.response.clearCookie('error')
+  }
+
+  afterAction(path: string) {
+    this.render(path, this)
+  }
+
+  redirect(url: string) {
+    this.shouldRender = false
+    this.response.redirect(url)
+  }
+
+  render(view: string, locals: Object) {
+    this.shouldRender = false
+    this.response.render(view, locals)
   }
 
   async validate(record: any) {

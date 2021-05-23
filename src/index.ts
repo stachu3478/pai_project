@@ -47,16 +47,6 @@ createConnection(ormconfig).then(async connection => {
     // insert new users for test
     seeds(connection)
 
-    //////////////
-    // Generate test SMTP service account from ethereal.email
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = 
-
-  // send mail with defined transport object
-  
-  ////////////////
-
     console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
 
 }).catch(error => console.log(error));
