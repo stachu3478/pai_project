@@ -4,19 +4,29 @@ import AppController from './AppController';
 import { Tournament } from '../entity/Tournament';
 
 // TODO policy
-export class UserController extends AppController {
+export class TournamentController extends AppController {
     private tournamentRepository = getRepository(Tournament);
 
     async index() {
-        this.response.render('users/index', {
+        const id = this.request.query.id
+        if (id && typeof id === 'string') return this.show(parseInt(id))
+        this.response.render('tournaments/index', {
             notice: this.request.cookies.notice,
             tournaments: await this.tournamentRepository.find()
         })
     }
 
+    async show(id: number) {
+        const tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
+        this.response.render('tournaments/show', {
+            notice: this.request.cookies.notice,
+            tournament
+        })
+    }
+
     async new() {
-        const user = this.tournamentRepository.create(this.session.takeCache('lastParams', {}))
-        this.response.render('users/new', { errors: this.session.takeCache('errors', {}), user })
+        const tournament = this.tournamentRepository.create(this.session.takeCache('lastParams', {}))
+        this.response.render('tournaments/new', { errors: this.session.takeCache('errors', {}), tournament })
     }
 
     async create() {
@@ -26,11 +36,11 @@ export class UserController extends AppController {
         const errors = await this.validate(tournament)
         if (errors.length) {
             this.session.putCache('lastParams', params)
-            this.response.redirect('users/new')
+            this.response.redirect('tournaments/new')
         } else {
             await this.tournamentRepository.insert(tournament)
             this.response.cookie('notice', 'User saved successfully')
-            this.response.redirect('users')
+            this.response.redirect('tournaments')
         }
     }
 

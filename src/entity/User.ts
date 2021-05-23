@@ -1,10 +1,12 @@
-import {Entity, Column, PrimaryColumn, Check} from "typeorm";
-import { IsEmail, Length, MinLength, Validate } from "class-validator"
+import {Entity, Column, PrimaryColumn, getRepository} from "typeorm";
+import { IsEmail, MinLength, Validate } from "class-validator"
 import bcrypt from 'bcrypt'
 import { UniqueEmail } from "../validator/UniqueEmail";
+import AppEntity from "./AppEntity";
 
 @Entity()
-export class User {
+export class User extends AppEntity<User> {
+    repository = getRepository(User)
 
     @MinLength(2)
     @Column()

@@ -1,9 +1,11 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository} from "typeorm";
 import { MinLength, Min, MinDate } from "class-validator"
 import { User } from "./User";
+import AppEntity from "./AppEntity";
 
 @Entity()
-export class Tournament {
+export class Tournament extends AppEntity<Tournament> {
+    repository = getRepository(Tournament)
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -20,7 +22,7 @@ export class Tournament {
     author: User;
 
     @MinDate(new Date())
-    @Column('datetime2')
+    @Column('datetime')
     startTime: Date
 
     // TODO location
@@ -30,7 +32,7 @@ export class Tournament {
     maxApplications: number
 
     @MinDate(new Date()) // TODO not later than start time
-    @Column('datetime2')
+    @Column('datetime')
     applicationDeadline: Date
 
     // TODO sponsors

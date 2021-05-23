@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title Tournaments
+  body
+    if notice 
+      p.notice #{notice}
+    h2 Tournaments 
+    a(href="/tournaments/new") New
+    div.card
+      each tournament in tournaments
+        article
+          h3 #{tournament.name}
+          p Subject: #{tournament.subject}
+          p Starts at: #{tournament.startTime}
+          p Application deadline: #{tournament.applicationDeadline}
+          a(href=(`/tournaments?id=${tournament.id}`)) Show

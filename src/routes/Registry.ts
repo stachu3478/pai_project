@@ -15,6 +15,7 @@ export default class RouteRegistry {
       const fullPath = route.route
       const router = this.findRouter(fullPath)
       const path = this.findPath(fullPath)
+      console.log(path, fullPath)
       router[route.method](path, (req: express.Request, res: express.Response, next: Function) => {
         const controller = (new (route.controller as any)(req, res, next))
         if (!controller || !controller[route.action] || path !== req.path) {
@@ -41,6 +42,7 @@ export default class RouteRegistry {
       if (!newRouter) {
         newRouter = this.routers[dir] = express.Router()
         router.use(`/${dir}`, newRouter)
+        console.log('      /', dir)
       }
       router = newRouter
     }
