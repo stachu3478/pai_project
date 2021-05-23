@@ -9,7 +9,6 @@ import seeds from "./seeds";
 import ormconfig from "../ormconfig";
 import { TypeormStore } from "connect-typeorm/out";
 import { Session } from "./entity/Session";
-import * as nodemailer from 'nodemailer'
 import './utils/env'
 
 createConnection(ormconfig).then(async connection => {
@@ -44,7 +43,7 @@ createConnection(ormconfig).then(async connection => {
     // start express server
     app.listen(3000);
 
-    // insert new users for test
+    // save some records for test
     seeds(connection)
 
     console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");

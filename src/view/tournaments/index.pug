@@ -1,19 +1,16 @@
-doctype html
-html
-  head
-    title Tournaments
-  body
-    if notice 
-      p.notice #{notice}
-    h2 Tournaments 
-    a(href="/tournaments/new") New
-    span &nbsp;
-    a(href="/users/sessions/new") Login
-    div.card
-      each tournament in tournaments
-        article
-          h3 #{tournament.name}
-          p Subject: #{tournament.subject}
-          p Starts at: #{tournament.startTime}
-          p Application deadline: #{tournament.applicationDeadline}
-          a(href=(`/tournaments?id=${tournament.id}`)) Show
+extends ../layout/app.pug
+
+block title
+  | Tournaments
+
+block content
+  h2 Tournaments 
+  a(href="/tournaments/new") New tournament
+  div.card
+    each tournament in tournaments
+      article
+        h3 #{tournament.name}
+        p Subject: #{tournament.subject}
+        p Starts at: #{tournament.startTime}
+        p Application deadline: #{tournament.applicationDeadline}
+        a(href=(`/tournaments?id=${tournament.id}`)) Show

@@ -6,7 +6,7 @@ export default class ActivationMailer {
     Mailer.get().send({
       to: user.email,
       subject: 'App - activate your account',
-      template: './view/mailer/activate',
+      template: 'mailer/activate',
       locals: {
         email: user.email,
         activationCode: user.activationCode

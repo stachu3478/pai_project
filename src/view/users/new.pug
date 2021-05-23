@@ -1,27 +1,28 @@
-doctype html
-html
-  head
-    title New user
-  body
-    a(href="/tournaments") Back
-    form(action="/users", method="post") 
-      fieldset 
-        legend User data 
-        if errors
-          each error in errors
-            each constraint in error.constraints
-              div.error #{constraint}
-        br
-        label(for="firstName") First name 
-        br
-        input(type="text", name="firstName", value=user.firstName)
-        br
-        label(for="lastName") Last name 
-        br
-        input(type="text", name="lastName", value=user.lastName)
-        br
-        label(for="email") Email
-        br
-        input(type="text", name="email", value=user.email)
-        br
-        button(type="submit") Save
+extends ../layout/app.pug
+
+block title
+  | Register
+
+block content
+  a(href="/tournaments") Back
+  form(action="/users", method="post") 
+    fieldset 
+      legend User data 
+      if errors
+        each error in errors
+          each constraint in error.constraints
+            div.error #{constraint}
+      br
+      label(for="firstName") First name 
+      br
+      input(type="text", name="firstName", value=user.firstName)
+      br
+      label(for="lastName") Last name 
+      br
+      input(type="text", name="lastName", value=user.lastName)
+      br
+      label(for="email") Email
+      br
+      input(type="text", name="email", value=user.email)
+      br
+      button(type="submit") Save

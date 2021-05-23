@@ -1,25 +1,24 @@
-doctype html
-html
-  head
-    title Login
-  body
-    a(href="/tournaments") Back
-    span &nbsp;
-    a(href="/users/new") Register
-    span &nbsp;
-    a(href="/users/recoveries/new") Forgot password?
-    form(action="/users/sessions", method="post") 
-      fieldset 
-        legend Login form 
-        if error
-          div.error #{error}
-        br
-        label(for="email") Email
-        br
-        input(type="text", name="email", value=params.email)
-        br
-        label(for="password") Password
-        br
-        input(type="password", name="password", value=params.password)
-        br
-        button(type="submit") Login
+extends ../../layout/app.pug
+
+block title
+  | Login
+
+block content
+  a(href="/tournaments") Back
+  span &nbsp;
+  a(href="/users/new") Register
+  span &nbsp;
+  a(href="/users/recoveries/new") Forgot password?
+  form(action="/users/sessions", method="post") 
+    fieldset 
+      legend Login form
+      br
+      label(for="email") Email
+      br
+      input(type="text", name="email", value=params.email)
+      br
+      label(for="password") Password
+      br
+      input(type="password", name="password", value=params.password)
+      br
+      button(type="submit") Login

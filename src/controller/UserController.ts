@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import {getRepository} from "typeorm";
 import {User} from "../entity/User";
 import AppController from './AppController';
+import ActivationMailer from '../mailer/ActivationMailer';
 
 export class UserController extends AppController {
     private userRepository = getRepository(User);
@@ -19,9 +20,11 @@ export class UserController extends AppController {
             this.session.putCache('lastParams', params)
             this.response.redirect('users/new')
         } else {
+            user.rotateActivationCode()
             await this.userRepository.insert(user)
-            this.response.cookie('notice', 'User saved successfully')
-            this.response.redirect('users')
+            new ActivationMailer().send(user)
+            this.response.cookie('notice', 'An activation link has been sent to email provided, please follow your mailbox to proceed')
+            this.response.redirect('users/sessions/new')
         }
     }
 

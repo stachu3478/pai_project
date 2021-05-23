@@ -1,11 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { MinLength, Min, MinDate } from "class-validator"
 import { User } from "./User";
-import AppEntity from "./AppEntity";
 
 @Entity()
-export class Tournament extends AppEntity<Tournament> {
-    repository = getRepository(Tournament)
+export class Tournament {
 
     @PrimaryGeneratedColumn()
     id: number;

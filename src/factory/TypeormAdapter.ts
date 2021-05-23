@@ -16,7 +16,7 @@ export default class TypeormAdapter {
 
   async get(model, attr, Model) {
     const all = await getRepository(model.constructor).find()
-    const index = _.random(0, all.length)
+    const index = _.random(0, all.length - 1)
     return all[index][attr]
   }
 

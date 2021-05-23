@@ -22,7 +22,7 @@ export default class AppController {
   }
 
   afterAction(path: string) {
-    this.render(path, this)
+    if (this.shouldRender) this.render(path, this)
   }
 
   redirect(url: string) {

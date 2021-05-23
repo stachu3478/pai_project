@@ -1,12 +1,11 @@
-import {Entity, Column, PrimaryColumn, getRepository} from "typeorm";
+import { v4 } from 'uuid'
+import {Entity, Column, PrimaryColumn } from "typeorm";
 import { IsEmail, MinLength, Validate } from "class-validator"
 import * as bcrypt from 'bcrypt'
 import { UniqueEmail } from "../validator/UniqueEmail";
-import AppEntity from "./AppEntity";
 
 @Entity()
-export class User extends AppEntity<User> {
-    repository = getRepository(User)
+export class User {
 
     @MinLength(2)
     @Column()
@@ -45,6 +44,11 @@ export class User extends AppEntity<User> {
         default: false
     })
     recovering: boolean;
+
+    rotateActivationCode() {
+        this.active = false
+        this.activationCode = v4()
+    }
 
     passwordMathes(val: string) {
         if (!this.passwordHash) return false

@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title
+      block title
+  body
+    nav 
+      a(href="/tournaments") Tournaments
+      span &nbsp;
+      a(href="/users/sessions/new") Login
+      span &nbsp;
+      a(href="/users/new") Register
+    .main 
+      if notice 
+        p.notice #{notice}
+      if error 
+        p.error #{error}
+      block content
+    footer App inc.
