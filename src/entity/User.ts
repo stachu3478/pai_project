@@ -55,6 +55,10 @@ export class User {
         return bcrypt.compareSync(val, this.passwordHash);
     }
 
+    get activationUrl() {
+        return `${process.env.SERVER_HOST}/users/passwords/new?email=${this.email}&activationCode=${this.activationCode}`
+    }
+
     set password(val: string) {
         this.passwordHash = bcrypt.hashSync(val, 10);
     }

@@ -23,9 +23,20 @@ export default class RouteRegistry {
           return
         }
         controller.beforeAction()
-        const result = controller[route.action]();
+        let result;
+        try {
+          result = controller[route.action]();
+        } catch(err) {
+          console.error(err)
+          res.end('Internal server error.')
+        }
         if (result instanceof Promise) {
-            result.then(result => result !== null && result !== undefined ? res.send(result) : undefined);
+            result
+              .then(result => result !== null && result !== undefined ? res.send(result) : undefined)
+              .catch(err => {
+                console.error(err)
+                res.end('Internal server error.')
+              })
         } else if (result !== null && result !== undefined) {
             res.json(result);
         } else res.end()

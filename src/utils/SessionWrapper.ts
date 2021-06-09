@@ -9,8 +9,7 @@ export default class SessionWrapper {
   
   constructor (request: Request) {
     this.store = request.session
-    this.cache = SessionWrapper.globalCache[request.sessionID]
-      || (SessionWrapper.globalCache[request.sessionID] = {})
+    this.cache = this.findOrCreateCache(request.session.id)
   }
 
   putCache(key: string, v: any) {
@@ -21,6 +20,16 @@ export default class SessionWrapper {
     const v = this.cache[key]
     delete this.cache[key]
     return v || defaultValue
+  }
+
+  private findOrCreateCache(id: string) {
+    if (SessionWrapper.globalCache[id]) {
+      console.log('loading cache', id)
+      return SessionWrapper.globalCache[id]
+    } else {
+      console.log('creating new cache', id)
+      return SessionWrapper.globalCache[id] = {}
+    }
   }
 
   async getUser() {

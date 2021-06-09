@@ -1,15 +1,20 @@
 import * as _ from 'lodash'
-import {getRepository} from "typeorm";
+import {getRepository, DeepPartial, getConnection} from "typeorm";
 import {User} from "../entity/User";
 import AppController from './AppController';
 import ActivationMailer from '../mailer/ActivationMailer';
+import { ValidationError } from 'class-validator';
 
 export class UserController extends AppController {
     private userRepository = getRepository(User);
+    user: User
+    errors: ValidationError[]
 
     async new() {
-        const user = this.userRepository.create(this.session.takeCache('lastParams', {}))
-        this.response.render('users/new', { errors: this.session.takeCache('errors', {}), user })
+        this.user = this.userRepository.create(this.session.takeCache('lastParams', {}) as DeepPartial<User>)
+        this.errors = this.session.takeCache('errors', {})
+        console.log('user and errors:', this.user, this.errors)
+        this.render('users/new')
     }
 
     async create() {
@@ -21,8 +26,11 @@ export class UserController extends AppController {
             this.response.redirect('users/new')
         } else {
             user.rotateActivationCode()
-            await this.userRepository.insert(user)
-            new ActivationMailer().send(user)
+            await getConnection().transaction(async transactionalEntityManager => {
+                await transactionalEntityManager.save(user)
+                await new ActivationMailer().send(user)
+            });
+            
             this.response.cookie('notice', 'An activation link has been sent to email provided, please follow your mailbox to proceed')
             this.response.redirect('users/sessions/new')
         }

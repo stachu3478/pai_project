@@ -1,8 +1,14 @@
 import {UserController} from "../controller/UserController";
 import { TournamentController } from "../controller/TournamentController";
 import { SessionController } from "../controller/users/SessionController";
+import { RootController } from "../controller/RootController";
 
 export const Routes = [{
+    method: "get",
+    route: "/",
+    controller: RootController,
+    action: "index"
+}, {
     method: "get",
     route: "users/new",
     controller: UserController,

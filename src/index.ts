@@ -7,8 +7,6 @@ import * as cookieparser from 'cookie-parser'
 import * as session from 'express-session'
 import seeds from "./seeds";
 import ormconfig from "../ormconfig";
-import { TypeormStore } from "connect-typeorm/out";
-import { Session } from "./entity/Session";
 import './utils/env'
 
 createConnection(ormconfig).then(async connection => {
@@ -21,17 +19,12 @@ createConnection(ormconfig).then(async connection => {
     app.use(cookieparser());
     app.use(session({
         secret: process.env.SESSION_SECRET || 'secret',
-        resave: false,
-        saveUninitialized: false,
+        resave: true,
+        saveUninitialized: true,
         cookie: {
             maxAge: 60 * 60 * 1000,
             secure: process.env.NODE_ENV === 'production'
-        },
-        store: new TypeormStore({
-            cleanupLimit: 2,
-            limitSubquery: false, // If using MariaDB.
-            ttl: 86400
-          }).connect(getRepository(Session)),
+        }
     }));
 
     // register express routes from defined application routes

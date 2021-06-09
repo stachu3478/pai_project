@@ -1,32 +1,31 @@
 import * as _ from 'lodash'
-import {getRepository} from "typeorm";
+import {getRepository, DeepPartial} from "typeorm";
 import AppController from './AppController';
 import { Tournament } from '../entity/Tournament';
 
 // TODO policy
 export class TournamentController extends AppController {
     private tournamentRepository = getRepository(Tournament);
+    tournaments: Tournament[] = []
+    tournament: Tournament
+    errors: any
 
     async index() {
         const id = this.request.query.id
         if (id && typeof id === 'string') return this.show(parseInt(id))
-        this.response.render('tournaments/index', {
-            notice: this.request.cookies.notice,
-            tournaments: await this.tournamentRepository.find()
-        })
+        this.tournaments = await this.tournamentRepository.find()
+        this.render('tournaments/index')
     }
 
     async show(id: number) {
-        const tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
-        this.response.render('tournaments/show', {
-            notice: this.request.cookies.notice,
-            tournament
-        })
+        this.tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
+        this.render('tournaments/show')
     }
 
     async new() {
-        const tournament = this.tournamentRepository.create(this.session.takeCache('lastParams', {}))
-        this.response.render('tournaments/new', { errors: this.session.takeCache('errors', {}), tournament })
+        this.tournament = this.tournamentRepository.create(this.session.takeCache('lastParams', {}) as DeepPartial<Tournament>)
+        this.errors = this.session.takeCache('errors', {})
+        this.render('tournaments/new')
     }
 
     async create() {
@@ -39,7 +38,7 @@ export class TournamentController extends AppController {
             this.response.redirect('tournaments/new')
         } else {
             await this.tournamentRepository.insert(tournament)
-            this.response.cookie('notice', 'User saved successfully')
+            this.response.cookie('notice', 'Tournament saved successfully')
             this.response.redirect('tournaments')
         }
     }

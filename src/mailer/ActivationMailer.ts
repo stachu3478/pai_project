@@ -1,15 +1,15 @@
 import { User } from "../entity/User";
 import Mailer from "./mailer";
+import { resolve } from "path";
 
 export default class ActivationMailer {
   send(user: User) {
-    Mailer.get().send({
+    return Mailer.get().send({
       to: user.email,
       subject: 'App - activate your account',
-      template: 'mailer/activate',
+      template: resolve(__dirname, '../view/mailer/activate.pug'),
       locals: {
-        email: user.email,
-        activationCode: user.activationCode
+        activationUrl: user.activationUrl
       }
     })
   }

@@ -22,7 +22,7 @@ export default class AppController {
   }
 
   afterAction(path: string) {
-    if (this.shouldRender) this.render(path, this)
+    if (this.shouldRender) this.render(path)
   }
 
   redirect(url: string) {
@@ -30,12 +30,20 @@ export default class AppController {
     this.response.redirect(url)
   }
 
-  render(view: string, locals: Object) {
+  render(view: string, locals: Object = this) {
     this.shouldRender = false
     this.response.render(view, locals)
   }
 
   async validate(record: any) {
     return this.session.putCache('errors', await validate(record))
+  }
+
+  get notice() {
+    return this.request.cookies.notice
+  }
+
+  get error() {
+    return this.request.cookies.error
   }
 }
