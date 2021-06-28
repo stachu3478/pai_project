@@ -51,7 +51,6 @@ function initMap() {
       marker = new google.maps.Marker({ map, position: latLng })
       longitudeInput.setAttribute('value', latLng.lng())
       latitudeInput.setAttribute('value', latLng.lat())
-      console.log('Position set at ' + latLng.lat() + ' ' + latLng.lng())
     });
   }
 }

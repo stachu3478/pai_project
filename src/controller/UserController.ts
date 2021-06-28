@@ -10,7 +10,6 @@ export class UserController extends AppController {
 
     async new() {
         this.user = this.userRepository.create(this.session.takeCache('lastParams', {}) as DeepPartial<User>)
-        console.log('user and errors:', this.user, this.errors)
         this.render('users/new')
     }
 

@@ -9,5 +9,8 @@ block scripts
 block content
   h2 #{tournament.name} - Edit
   a(href=(`/tournaments?id=${tournament.id}`)) Back
-  form(action=`/tournaments/update?id=${tournament.id}`, method="post")
-    include formContent.pug
+  .card
+    .eat
+    article.card
+      form(action=`/tournaments/update?id=${tournament.id}`, method="post")
+        include formContent.pug

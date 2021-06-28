@@ -9,5 +9,8 @@ block scripts
 block content
   h2 New Tournament
   a(href=(`/tournaments`)) Back
-  form(action="/tournaments", method="post") 
-    include formContent.pug
+  .card
+    .eat
+    article.card
+      form(action="/tournaments", method="post") 
+        include formContent.pug

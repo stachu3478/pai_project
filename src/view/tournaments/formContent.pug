@@ -27,10 +27,11 @@ fieldset
   div#map
   script(src=`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&callback=initMap&libraries=&v=weekly`, async) 
   label(for="sponsors") Application deadline
-  each sponsor, i in allSponsors
-    .sponsor
-      img(src=sponsor.logoUrl, alt=sponsor.name)
-      span #{sponsor.name}
-      input(type="hidden", name=`sponsors[${i}][0]`, value=sponsor.id)
-      input(type="checkbox", name=`sponsors[${i}][1]`, checked=(sponsors.some(s => s.id === sponsor.id)))
+  div.flexible
+    each sponsor, i in allSponsors
+      .sponsor
+        img(src=sponsor.logoUrl, alt=sponsor.name)
+        span #{sponsor.name}
+        input(type="hidden", name=`sponsors[${i}][0]`, value=sponsor.id)
+        input(type="checkbox", name=`sponsors[${i}][1]`, checked=(sponsors.some(s => s.id === sponsor.id)))
   button(type="submit") Save

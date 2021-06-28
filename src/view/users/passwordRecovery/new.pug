@@ -4,11 +4,13 @@ block title
   | Forgot Password
 
 block content
-  a(href="/users/sessions/new") Back
-  span &nbsp;
-  a(href="/users/new") Register
-  span &nbsp;
-  a(href="/users/password_recovery/new") Forgot password?
+  ul.nav.second
+    li.nav-item
+      a.nav-link(href="/tournaments") Back
+    ii.nav-item
+      a.nav-link(href="/users/new") Register
+    ii.nav-item
+      a.nav-link.active(href="/users/password_recovery/new") Forgot password?
   form(action="/users/password_recovery", method="post") 
     fieldset 
       legend Recovery form

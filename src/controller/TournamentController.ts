@@ -13,11 +13,16 @@ export class TournamentController extends AppController {
     tournaments: Tournament[] = []
     tournament: Tournament
     params: any = {}
+    perPage = 10
+    itemCount: number
+    currentPage: number
 
     async index() {
         const id = parseInt((this.request.query.id || '').toString())
         if (!_.isNaN(id)) return this.show(id)
-        this.tournaments = await this.tournamentRepository.find()
+        this.currentPage = parseInt((this.request.query.page || '').toString()) || 0
+        this.tournaments = await this.tournamentRepository.find({ take: this.perPage, skip: this.currentPage * this.perPage })
+        this.itemCount = await this.tournamentRepository.count()
         this.render('tournaments/index')
     }
 

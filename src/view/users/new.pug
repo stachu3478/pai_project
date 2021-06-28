@@ -4,7 +4,13 @@ block title
   | Register
 
 block content
-  a(href="/tournaments") Back
+  ul.nav.second
+    li.nav-item
+      a.nav-link(href="/tournaments") Back
+    ii.nav-item
+      a.nav-link.active(href="/users/new") Register
+    ii.nav-item
+      a.nav-link(href="/users/password_recovery/new") Forgot password?
   form(action="/users", method="post")
     fieldset 
       legend User data 
@@ -21,4 +27,4 @@ block content
       br
       input(type="text", name="email", value=user.email)
       br
-      button(type="submit") Save
+      button(type="submit") Register

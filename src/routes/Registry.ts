@@ -16,7 +16,6 @@ export default class RouteRegistry {
       const router = this.findRouter(fullPath)
       const path = this.findPath(fullPath)
       const action = this.getRouteAction(route)
-      console.log(path, fullPath, action)
       router[route.method](path, (req: express.Request, res: express.Response, next: Function) => {
         const controller = (new (route.controller as any)(req, res, next))
         const errorHandler = this.catchErrors(res)

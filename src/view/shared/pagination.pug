@@ -1,0 +1,14 @@
+- var pages = Math.ceil(itemCount / perPage) - 1
+if pages > 1
+  nav
+    ul.pagination
+      if currentPage > 0
+        li.page-item
+          a.page-link(href=`/tournaments?page=${currentPage - 1}`) Previous
+      - var i = -1
+      while i < pages
+        li.page-item
+          a.page-link(href=`/tournaments?page=${i}` class=(currentPage === ++i ? 'current-page' : '')) #{i}
+      if currentPage < pages
+        li.page-item
+          a.page-link(href=`/tournaments?page=${currentPage + 1}`) Next

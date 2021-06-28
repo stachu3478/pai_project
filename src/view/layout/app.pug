@@ -1,25 +1,34 @@
 doctype html
-html
+html(lang="en")
   head
     title
       block title
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous")
     link(rel="stylesheet", href="/css/app.css")
     block scripts
   body
     script(src='/javascript/app.js')
-    nav 
-      a(href="/tournaments") Tournaments
-      span &nbsp;
-      if currentUser 
-        a(href="/users/sessions/destroy") Logout
-      else
-        a(href="/users/sessions/new") Login
-      span &nbsp;
-      a(href="/users/new") Register
+    header
+      ul.nav
+        ul.nav-item
+          a.nav-link(href="/tournaments") Tournaments
+      ul.nav.justify-content-end
+        if currentUser 
+          ul.nav-item
+            a.nav-link(href="/users/sessions/destroy") Logout
+        else
+          ul.nav-item
+            a.nav-link(href="/users/sessions/new") Login
+          ul.nav-item
+            a.nav-link(href="/users/new") Register
     .main 
       if notice 
-        p.notice #{notice}
+        p.alert-secondary #{notice}
       if error 
-        p.error #{error}
+        p.alert-danger #{error}
       block content
-    footer App inc.
+      div.push
+    footer
+      div App inc.
+      div by Stan Players

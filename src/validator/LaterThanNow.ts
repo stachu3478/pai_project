@@ -3,7 +3,6 @@ import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validat
 @ValidatorConstraint({ name: 'LaterThanNow' })
 export class LaterThanNow implements ValidatorConstraintInterface {
   validate(date: string) {
-    console.log(new Date(date), new Date())
     return new Date(date) > (new Date())
   }
 

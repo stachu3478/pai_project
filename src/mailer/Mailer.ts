@@ -21,7 +21,6 @@ export default class Mailer {
       subject: opts.subject, // Subject line
       html: renderedTemplate, // html body
     });
-    console.log("Message sent: %s", info.messageId);
   }
 
   static get() {

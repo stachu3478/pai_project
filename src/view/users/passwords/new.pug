@@ -5,11 +5,13 @@ block title
 
 block content
   script(src='/javascript/password.js')
-  a(href="/users/sessions/new") Back
-  span &nbsp;
-  a(href="/users/new") Register
-  span &nbsp;
-  a(href="/users/password_recovery/new") Forgot password?
+  ul.nav.second
+    li.nav-item
+      a.nav-link(href="/tournaments") Back
+    ii.nav-item
+      a.nav-link(href="/users/new") Register
+    ii.nav-item
+      a.nav-link(href="/users/password_recovery/new") Forgot password?
   form(action="/users/passwords", method="post") 
     fieldset 
       legend Activating account

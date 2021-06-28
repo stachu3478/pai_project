@@ -8,10 +8,13 @@ block content
   if currentUser
     a(href="/tournaments/new") New tournament
   div.card
+    .eat
+    include ../shared/pagination.pug
     each tournament in tournaments
-      article
+      article.card
         h3 #{tournament.name}
         p Subject: #{tournament.subject}
         p Starts at: #{tournament.startTime.toISOString().split('T')[0]}
         p Application deadline: #{tournament.applicationDeadline.toISOString().split('T')[0]}
         a(href=(`/tournaments?id=${tournament.id}`)) Show
+    include ../shared/pagination.pug

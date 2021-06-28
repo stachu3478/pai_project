@@ -8,7 +8,6 @@ export class PasswordController extends AppController {
     params: any = {}
 
     async new() {
-      console.log(JSON.stringify(this.request.query))
       const { activationCode } = this.request.query
       const user = await this.userRepository.findOne({ activationCode: activationCode.toString() })
       if (user) {

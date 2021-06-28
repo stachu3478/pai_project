@@ -36,16 +36,6 @@ export class User {
     })
     active: boolean;
 
-    @Column({
-        nullable: true
-    })
-    recoveryCode: string;
-
-    @Column({
-        default: false
-    })
-    recovering: boolean;
-
     rotateActivationCode() {
         this.active = false
         this.activationCode = v4()

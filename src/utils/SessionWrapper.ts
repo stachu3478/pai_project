@@ -24,10 +24,8 @@ export default class SessionWrapper {
 
   private findOrCreateCache(id: string) {
     if (SessionWrapper.globalCache[id]) {
-      console.log('loading cache', id)
       return SessionWrapper.globalCache[id]
     } else {
-      console.log('creating new cache', id)
       return SessionWrapper.globalCache[id] = {}
     }
   }

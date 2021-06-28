@@ -1,3 +1,115 @@
+body {
+  background-color: cadetblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 div#map {
-  height: 700px
+  height: 700px;
+  width: 100%
+}
+
+a.current-page {
+  font-weight: bold;
+}
+
+div.paginator {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.paginator a {
+  margin: 0.5rem
+}
+
+.card {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background-color: darkolivegreen;
+  max-width: 900px;
+}
+
+.eat {
+  width: 900px;
+}
+
+.card > article, form {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: lightgreen;
+  padding: 0.5rem
+}
+
+article a {
+  border: 1px black solid;
+  border-radius: 3px;
+  padding: 0.5rem;
+  text-decoration: none;
+  background-color: aliceblue;
+  color: black;
+}
+
+header {
+  background-color: white;
+  border-bottom: 3px gray solid;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+p {
+  padding: 0.5rem
+}
+
+.nav.second {
+  background-color: lightsalmon;
+  border-bottom: 2px lightgray solid;
+}
+
+.push {
+  height: 100%;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  background-color: slategrey;
+  border-top: 3px teal solid;
+}
+
+footer * {
+  margin: 1rem;
+}
+
+.main {
+  min-height: calc(100vh - 150px);
+}
+
+div.flexible {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sponsor {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sponsor img {
+  width: 100px;
+  height: 100px
+}
+
+.card form,.card fieldset {
+  width: 100%
 }
