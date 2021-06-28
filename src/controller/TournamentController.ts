@@ -2,36 +2,100 @@ import * as _ from 'lodash'
 import {getRepository, DeepPartial} from "typeorm";
 import AppController from './AppController';
 import { Tournament } from '../entity/Tournament';
+import { Sponsor } from '../entity/Sponsor';
 
 // TODO policy
 export class TournamentController extends AppController {
     private tournamentRepository = getRepository(Tournament);
+    private sponsorRepository = getRepository(Sponsor);
+    sponsors: Sponsor[] = []
+    allSponsors: Sponsor[] = []
     tournaments: Tournament[] = []
     tournament: Tournament
-    errors: any
+    params: any = {}
 
     async index() {
-        const id = this.request.query.id
-        if (id && typeof id === 'string') return this.show(parseInt(id))
+        const id = parseInt((this.request.query.id || '').toString())
+        if (!_.isNaN(id)) return this.show(id)
         this.tournaments = await this.tournamentRepository.find()
         this.render('tournaments/index')
     }
 
     async show(id: number) {
-        this.tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
+        await this.fetchTournament(id)
+        if (!this.tournament) return
         this.render('tournaments/show')
     }
 
+    async edit() {
+        await this.fetchTournament()
+        if (!this.tournament) return
+        const authorEmail = this.tournament.author.toString()
+        if (this.currentUser && this.currentUser.email === authorEmail) {
+            this.allSponsors = await this.sponsorRepository.find()
+            this.params = this.session.takeCache('lastParams', this.tournament)
+            this.render('tournaments/edit')
+        } else {
+            this.response.cookie('notice', 'Access denied!')
+            this.response.redirect(`./?id=${this.tournament.id}`)
+        }
+    }
+
     async new() {
+        if (!this.currentUser) {
+            this.response.cookie('notice', 'Access denied!')
+            this.redirect('../')
+            return
+        }
         this.tournament = this.tournamentRepository.create(this.session.takeCache('lastParams', {}) as DeepPartial<Tournament>)
-        this.errors = this.session.takeCache('errors', {})
+        this.params = this.tournament
+        this.allSponsors = await this.sponsorRepository.find()
         this.render('tournaments/new')
     }
 
+    async update() {
+        if (!this.currentUser) {
+            this.response.cookie('notice', 'Access denied!')
+            this.redirect('../')
+            return
+        }
+        const id = parseInt(this.request.query.id.toString())
+        this.tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
+        const authorEmail = this.tournament.author.toString()
+        if (this.currentUser && this.currentUser.email === authorEmail) {
+            const params = this.tournamentParams
+            params.sponsors = await this.sponsorRepository.findByIds(params.sponsors)
+            Object.assign(this.tournament, params)
+            const errors = await this.validate(this.tournament)
+            if (!this.tournament) {
+                this.response.cookie('notice', `Can't find tournament with id ${id}`)
+                this.redirect('../')
+                return
+            }
+            if (errors.length) {
+                this.session.putCache('lastParams', params)
+                this.response.redirect('edit')
+            } else {
+                await this.tournamentRepository.save(this.tournament)
+                this.response.cookie('notice', 'Tournament saved successfully')
+                this.response.redirect(`./?id=${id}`)
+            }
+        } else {
+            this.response.cookie('notice', 'Access denied!')
+            this.response.redirect(`./?id=${id}`)
+        }
+    }
+
     async create() {
+        if (!this.currentUser) {
+            this.response.cookie('notice', 'Access denied!')
+            this.redirect('tournaments/index')
+            return
+        }
         const params = this.tournamentParams
+        params.sponsors = await this.sponsorRepository.findByIds(params.sponsors)
         const tournament = this.tournamentRepository.create(params)
-        tournament.author = this.session.user
+        tournament.author = this.currentUser
         const errors = await this.validate(tournament)
         if (errors.length) {
             this.session.putCache('lastParams', params)
@@ -43,7 +107,22 @@ export class TournamentController extends AppController {
         }
     }
 
+    private async fetchTournament(id = parseInt(this.request.query.id.toString())) {
+        this.tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
+        if (!this.tournament) {
+            this.response.cookie('notice', `Can't find tournament with id ${id}`)
+            this.redirect('../')
+            return
+        }
+        this.sponsors = await this.sponsorRepository.findByIds(this.tournament.sponsors)
+    }
+
     private get tournamentParams() {
-        return _.pick(this.request.body, ['name', 'subject', 'startTime', 'maxApplications', 'applicationDeadline']) 
+        const params = _.pick(this.request.body, ['name', 'subject', 'startTime', 'maxApplications', 'applicationDeadline', 'locationLatitude', 'locationLongitude', 'sponsors'])
+        params.maxApplications = parseInt(params.maxApplications)
+        params.locationLatitude = parseFloat(params.locationLatitude)
+        params.locationLongitude = parseFloat(params.locationLongitude)
+        params.sponsors = (params.sponsors || []).filter(s => s[1]).map(s => parseInt(s[0]))
+        return params
     }
 }

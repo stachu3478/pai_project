@@ -1,0 +1,36 @@
+fieldset 
+  legend Tournament form
+  br
+  include ../shared/validationErrors.pug
+  label(for="name") Name
+  br
+  input(type="text", name="name", value=params.name)
+  br
+  label(for="subject") Subject
+  br
+  input(type="text", name="subject", value=params.subject)
+  br
+  label(for="startTime") Start time
+  br
+  input(type="date", name="startTime", value=(params.startTime || '').toISOString().split('T')[0])
+  br
+  label(for="maxApplications") Max applications
+  br
+  input(type="text", name="maxApplications", value=params.maxApplications)
+  br
+  label(for="applicationDeadline") Application deadline
+  br
+  input(type="date", name="applicationDeadline", value=(params.applicationDeadline || '').toISOString().split('T')[0])
+  br
+  input(type="hidden", name="locationLatitude", value=params.locationLatitude)
+  input(type="hidden", name="locationLongitude", value=params.locationLongitude)
+  div#map
+  script(src=`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&callback=initMap&libraries=&v=weekly`, async) 
+  label(for="sponsors") Application deadline
+  each sponsor, i in allSponsors
+    .sponsor
+      img(src=sponsor.logoUrl, alt=sponsor.name)
+      span #{sponsor.name}
+      input(type="hidden", name=`sponsors[${i}][0]`, value=sponsor.id)
+      input(type="checkbox", name=`sponsors[${i}][1]`, checked=(sponsors.some(s => s.id === sponsor.id)))
+  button(type="submit") Save

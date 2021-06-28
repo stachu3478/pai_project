@@ -3,11 +3,17 @@ html
   head
     title
       block title
+    link(rel="stylesheet", href="/css/app.css")
+    block scripts
   body
+    script(src='/javascript/app.js')
     nav 
       a(href="/tournaments") Tournaments
       span &nbsp;
-      a(href="/users/sessions/new") Login
+      if currentUser 
+        a(href="/users/sessions/destroy") Logout
+      else
+        a(href="/users/sessions/new") Login
       span &nbsp;
       a(href="/users/new") Register
     .main 

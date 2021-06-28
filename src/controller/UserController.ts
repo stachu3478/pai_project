@@ -3,16 +3,13 @@ import {getRepository, DeepPartial, getConnection} from "typeorm";
 import {User} from "../entity/User";
 import AppController from './AppController';
 import ActivationMailer from '../mailer/ActivationMailer';
-import { ValidationError } from 'class-validator';
 
 export class UserController extends AppController {
     private userRepository = getRepository(User);
     user: User
-    errors: ValidationError[]
 
     async new() {
         this.user = this.userRepository.create(this.session.takeCache('lastParams', {}) as DeepPartial<User>)
-        this.errors = this.session.takeCache('errors', {})
         console.log('user and errors:', this.user, this.errors)
         this.render('users/new')
     }

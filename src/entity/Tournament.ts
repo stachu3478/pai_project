@@ -1,6 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { MinLength, Min, MinDate } from "class-validator"
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { MinLength, Min, Validate, Max } from "class-validator"
 import { User } from "./User";
+import { LaterThan } from "../validator/LaterThan";
+import { LaterThanNow } from "../validator/LaterThanNow";
+import { Sponsor } from "./Sponsor";
 
 @Entity()
 export class Tournament {
@@ -19,19 +22,29 @@ export class Tournament {
     @ManyToOne('User')
     author: User;
 
-    @MinDate(new Date())
+    @Validate(LaterThan, ['applicationDeadline'])
     @Column('datetime')
     startTime: Date
 
-    // TODO location
+    @Min(-90)
+    @Max(90)
+    @Column('double')
+    locationLatitude: number
+
+    @Min(-180)
+    @Max(180)
+    @Column('double')
+    locationLongitude: number
 
     @Min(2)
     @Column()
     maxApplications: number
 
-    @MinDate(new Date()) // TODO not later than start time
+    @Validate(LaterThanNow)
     @Column('datetime')
     applicationDeadline: Date
 
-    // TODO sponsors
+    @JoinTable()
+    @ManyToMany(() => Sponsor)
+    sponsors: Sponsor[]
 }

@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import {Entity, Column, PrimaryColumn } from "typeorm";
+import {Entity, Column, PrimaryColumn, Index } from "typeorm";
 import { IsEmail, MinLength, Validate } from "class-validator"
 import * as bcrypt from 'bcrypt'
 import { UniqueEmail } from "../validator/UniqueEmail";
@@ -25,6 +25,7 @@ export class User {
     })
     passwordHash: string;
 
+    @Index({ unique: true })
     @Column({
         nullable: true
     })

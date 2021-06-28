@@ -27,6 +27,9 @@ createConnection(ormconfig).then(async connection => {
         }
     }));
 
+    // register static files hosting
+    app.use(express.static('src/public'))
+
     // register express routes from defined application routes
     new RouteRegistry(app).register()
 

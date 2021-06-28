@@ -36,6 +36,10 @@ export default class SessionWrapper {
     return await getRepository(User).findOne({ email: this.store.loggedInUserEmail })
   }
 
+  removeUser() {
+    delete this.store.loggedInUserEmail
+  }
+
   set user(user: User) {
     this.store.loggedInUserEmail = user.email
   }

@@ -1,0 +1,25 @@
+extends ../../layout/app.pug
+
+block title
+  | Forgot Password
+
+block content
+  script(src='/javascript/password.js')
+  a(href="/users/sessions/new") Back
+  span &nbsp;
+  a(href="/users/new") Register
+  span &nbsp;
+  a(href="/users/password_recovery/new") Forgot password?
+  form(action="/users/passwords", method="post") 
+    fieldset 
+      legend Activating account
+      input(type="hidden", name="activationCode", value=params.activationCode)
+      label(for="password") Password
+      br
+      input(type="password", name="password")
+      br
+      label(for="password") Repeat password
+      br
+      input(type="password", name="repeatPassword")
+      br
+      button(type="submit") Activate

@@ -1,13 +1,19 @@
+import * as _ from 'lodash'
 import { Request, Response, NextFunction } from "express";
-import { validate } from "class-validator";
+import { validate, ValidationError } from "class-validator";
 import SessionWrapper from "../utils/SessionWrapper";
+import { User } from "../entity/User";
 
 export default class AppController {
+  public currentUser?: User | false
   protected request: Request
   protected response: Response
   protected next: NextFunction
   protected session: SessionWrapper
   private shouldRender = true
+  errors: ValidationError[] = []
+  _ = _
+  googleApiKey = process.env.GOOGLE_API_KEY
 
   constructor(request: Request, response: Response, next: NextFunction) {
     this.request = request
@@ -16,9 +22,11 @@ export default class AppController {
     this.session = new SessionWrapper(request)
   }
 
-  beforeAction() {
+  async beforeAction() {
     this.response.clearCookie('notice')
     this.response.clearCookie('error')
+    this.errors = this.session.takeCache('errors', {})
+    this.currentUser = await this.session.getUser()
   }
 
   afterAction(path: string) {

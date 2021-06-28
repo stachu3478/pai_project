@@ -1,0 +1,13 @@
+extends ../layout/app.pug
+
+block title
+  | New Tournament
+
+block scripts 
+  script(src='/javascript/googleMap.js')
+
+block content
+  h2 New Tournament
+  a(href=(`/tournaments`)) Back
+  form(action="/tournaments", method="post") 
+    include formContent.pug

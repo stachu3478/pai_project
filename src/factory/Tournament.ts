@@ -11,5 +11,7 @@ factory.define('tournament', Tournament, {
   author: factory.assoc('user', 'email'),
   startTime: () => DateTime.now().plus(Duration.fromMillis(_.random(1000000, 1000000000))).toJSDate(),
   maxApplications: () => _.random(10, 1000),
+  locationLatitude: () => _.random(48.965, 54.444, true),
+  locationLongitude: () => _.random(14.765, 24.104, true),
   applicationDeadline: () => DateTime.now().plus(Duration.fromMillis(_.random(100000, 500000000))).toJSDate(),
 }, opts)

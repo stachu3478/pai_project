@@ -3,14 +3,29 @@ extends ../layout/app.pug
 block title
   | Tournament
 
+block scripts 
+  script(src='/javascript/googleMap.js') 
+
 block content
   h2 Tournament - #{tournament.name}
   a(href=(`/tournaments`)) Back
-  span &nbsp;
-  a(href=(`/tournaments/${tournament.id}/edit`)) Edit
+  if currentUser && tournament.author === currentUser.email
+    span &nbsp;
+    a(href=(`/tournaments/edit?id=${tournament.id}`)) Edit
   div.card
     p Subject: #{tournament.subject}
-    p Starts at: #{tournament.startTime}
-    p Application deadline: #{tournament.applicationDeadline}
+    p Starts at: #{tournament.startTime.toISOString().split('T')[0]}
+    p Application deadline: #{tournament.applicationDeadline.toISOString().split('T')[0]}
     p Author: #{tournament.author}
     p Applications available: #{tournament.maxApplications}
+    input(type="hidden", name="locationLatitude", value=tournament.locationLatitude)
+    input(type="hidden", name="locationLongitude", value=tournament.locationLongitude)
+    p Location:
+    div#map
+    script(src=`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&callback=initMap&libraries=&v=weekly`, async)
+    p Sponsors:
+      br
+      each sponsor in sponsors
+        .sponsor
+          img(src=sponsor.logoUrl, alt=sponsor.name)
+          span #{sponsor.name}

@@ -5,14 +5,10 @@ block title
 
 block content
   a(href="/tournaments") Back
-  form(action="/users", method="post") 
+  form(action="/users", method="post")
     fieldset 
       legend User data 
-      if errors
-        each error in errors
-          each constraint in error.constraints
-            div.error #{constraint}
-      br
+      include ../shared/validationErrors.pug
       label(for="firstName") First name 
       br
       input(type="text", name="firstName", value=user.firstName)

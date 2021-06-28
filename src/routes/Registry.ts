@@ -1,6 +1,6 @@
 import * as express from "express";
 import { Router } from "express";
-import { Routes } from "./routes";
+import { Routes, Route } from "./routes";
 
 export default class RouteRegistry {
   private app: express.Express
@@ -15,33 +15,54 @@ export default class RouteRegistry {
       const fullPath = route.route
       const router = this.findRouter(fullPath)
       const path = this.findPath(fullPath)
-      console.log(path, fullPath)
+      const action = this.getRouteAction(route)
+      console.log(path, fullPath, action)
       router[route.method](path, (req: express.Request, res: express.Response, next: Function) => {
         const controller = (new (route.controller as any)(req, res, next))
-        if (!controller || !controller[route.action] || path !== req.path) {
+        const errorHandler = this.catchErrors(res)
+        if (!controller || !controller[action] || path !== req.path) {
+          console.log('Warning. Skipping route.', fullPath)
           next()
           return
         }
-        controller.beforeAction()
-        let result;
-        try {
-          result = controller[route.action]();
-        } catch(err) {
-          console.error(err)
-          res.end('Internal server error.')
-        }
-        if (result instanceof Promise) {
-            result
-              .then(result => result !== null && result !== undefined ? res.send(result) : undefined)
-              .catch(err => {
-                console.error(err)
-                res.end('Internal server error.')
-              })
-        } else if (result !== null && result !== undefined) {
-            res.json(result);
-        } else res.end()
+        controller.beforeAction().then(() => {
+          let result;
+          try {
+            result = controller[action]();
+          } catch(err) {
+            errorHandler(err)
+          }
+          if (result instanceof Promise) {
+              result
+                .then(result => result !== null && result !== undefined ? res.send(result) : undefined)
+                .catch(errorHandler)
+          } else if (result !== null && result !== undefined) {
+              res.json(result);
+          } else res.end()
+        }).catch(errorHandler)
       });
     });
+  }
+
+  private catchErrors(res: express.Response) {
+    return (err: any) => {
+      console.error(err)
+      res.end('Internal server error.')
+    }
+  }
+
+  private getRouteAction(route: Route<any>) {
+    if (route.action) {
+      return route.action
+    }
+    if (route.route.endsWith('/')) {
+      if (route.method === 'get') {
+        return 'index'
+      } if (route.method === 'post') {
+        return 'create'
+      }
+    }
+    return route.route.slice(route.route.lastIndexOf('/') + 1)
   }
 
   private findRouter(path: String) {
@@ -53,7 +74,6 @@ export default class RouteRegistry {
       if (!newRouter) {
         newRouter = this.routers[dir] = express.Router()
         router.use(`/${dir}`, newRouter)
-        console.log('      /', dir)
       }
       router = newRouter
     }
