@@ -12,7 +12,7 @@ fieldset
   br
   label(for="startTime") Start time
   br
-  input(type="date", name="startTime", value=(params.startTime || '').toISOString().split('T')[0])
+  input(type="date", name="startTime", value=(typeof params.startTime === 'object' ? params.startTime.toISOString().split('T')[0] : params.startTime))
   br
   label(for="maxApplications") Max applications
   br
@@ -20,7 +20,7 @@ fieldset
   br
   label(for="applicationDeadline") Application deadline
   br
-  input(type="date", name="applicationDeadline", value=(params.applicationDeadline || '').toISOString().split('T')[0])
+  input(type="date", name="applicationDeadline", value=(typeof params.applicationDeadline === 'object' ? params.applicationDeadline.toISOString().split('T')[0] : params.applicationDeadline))
   br
   input(type="hidden", name="locationLatitude", value=params.locationLatitude)
   input(type="hidden", name="locationLongitude", value=params.locationLongitude)

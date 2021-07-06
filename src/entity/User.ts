@@ -31,6 +31,12 @@ export class User {
     })
     activationCode: string;
 
+    @Index({ unique: true })
+    @Column({
+        nullable: true
+    })
+    recoveryCode: string;
+
     @Column({
         default: false
     })

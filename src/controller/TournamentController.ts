@@ -79,7 +79,7 @@ export class TournamentController extends AppController {
             }
             if (errors.length) {
                 this.session.putCache('lastParams', params)
-                this.response.redirect('edit')
+                this.response.redirect(`edit?id=${id}`)
             } else {
                 await this.tournamentRepository.save(this.tournament)
                 this.response.cookie('notice', 'Tournament saved successfully')
@@ -112,7 +112,7 @@ export class TournamentController extends AppController {
         }
     }
 
-    private async fetchTournament(id = parseInt(this.request.query.id.toString())) {
+    private async fetchTournament(id = parseInt(this.request.query.id && this.request.query.id.toString())) {
         this.tournament = await this.tournamentRepository.findOne({ id }, { loadRelationIds: true })
         if (!this.tournament) {
             this.response.cookie('notice', `Can't find tournament with id ${id}`)

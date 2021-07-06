@@ -30,7 +30,6 @@
       "uuid": "^8.3.2"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
-      "migrate": "typeorm migration:run"
+      "start": "ts-node src/index.ts"
    }
 }
